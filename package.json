@@ -1,24 +1,14 @@
 {
-  "name": "car-vally-server",
+  "name": "car-valley-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "start-dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ProgrammingHeroWC4/warehouse-management-server-side-JabedH.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ProgrammingHeroWC4/warehouse-management-server-side-JabedH/issues"
-  },
-  "homepage": "https://github.com/ProgrammingHeroWC4/warehouse-management-server-side-JabedH#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",

@@ -1,16 +1,18 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const app = express();
 const port = process.env.PORT || 5000;
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const { query } = require("express");
+const app = express();
 
 app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Running server");
+  res.send("server is running");
 });
 
 app.listen(port, () => {
-  console.log("port listening", port);
+  console.log("running", port);
 });
