@@ -20,12 +20,22 @@ async function run() {
   try {
     await client.connect();
     const carCollection = client.db("CarValley").collection("Cars");
-    //
+    const VehiclesCollection = client.db("CarValley").collection("Vehicles");
+
+    //car Collection
     app.get("/Cars", async (req, res) => {
       const query = {};
       const cursor = carCollection.find(query);
       const car = await cursor.toArray();
       res.send(car);
+    });
+
+    //Vehicles Collection
+    app.get("/Vehicles", async (req, res) => {
+      const query = {};
+      const cursor = VehiclesCollection.find(query);
+      const vehicle = await cursor.toArray();
+      res.send(vehicle);
     });
   } finally {
   }
