@@ -30,7 +30,7 @@ async function run() {
       res.send(car);
     });
 
-    //Vehicles Collection
+    //Vehicles Collection.
     app.get("/Vehicles", async (req, res) => {
       const query = {};
       const cursor = VehiclesCollection.find(query);
