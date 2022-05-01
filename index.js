@@ -58,6 +58,11 @@ async function run() {
       const result = await carCollection.updateOne(filter, updateCar, options);
       res.send(result);
     });
+    app.post("/Cars", async (req, res) => {
+      const newCar = req.body;
+      const result = await carCollection.insertOne(newCar);
+      res.send(result);
+    });
     // delete
     app.delete("/Cars/:id", async (req, res) => {
       const id = req.params.id;
