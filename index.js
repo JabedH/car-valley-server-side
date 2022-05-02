@@ -4,6 +4,7 @@ require("dotenv").config();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const { query } = require("express");
+const jwt = require("jsonwebtoken");
 const app = express();
 
 app.use(cors());
@@ -21,6 +22,7 @@ async function run() {
     await client.connect();
     const carCollection = client.db("CarValley").collection("Cars");
     const VehiclesCollection = client.db("CarValley").collection("Vehicles");
+    const carAdd = client.db("CarValley").collection("addCar");
 
     //car Collection
     app.get("/Cars", async (req, res) => {
@@ -58,11 +60,45 @@ async function run() {
       const result = await carCollection.updateOne(filter, updateCar, options);
       res.send(result);
     });
-    app.post("/Cars", async (req, res) => {
-      const newCar = req.body;
-      const result = await carCollection.insertOne(newCar);
-      res.send(result);
+
+    // add new car
+    app.get("/addCar", async (req, res) => {
+      const getToken = req.headers.authorization;
+      console.log(getToken);
+      const [email, accessToken] = getToken.split(" ");
+      var decoded = verifyToken(accessToken);
+
+      if (email === decoded.email) {
+        const addcar = await carAdd.find({ email: email }).toArray();
+        res.send(addcar);
+      } else {
+        res.send({ success: "UnAuthorized assess" });
+      }
     });
+    //
+    app.post("/login", (req, res) => {
+      const email = req.body;
+      console.log(email);
+      const token = jwt.sign(email, process.env.ACCESS_TOKEN);
+      console.log(token);
+      res.send({ token });
+    });
+
+    app.post("/addCar", async (req, res) => {
+      const newCar = req.body;
+      const getToken = req.headers.authorization;
+      const [email, accessToken] = getToken?.split(" ");
+      var decoded = verifyToken(accessToken);
+      // const decoded = verifyToken(accessToken, process.env.ACCESS_TOKEN);
+      console.log(decoded);
+      if (email === decoded.email) {
+        const result = await carAdd.insertOne(newCar);
+        res.send({ success: "success" });
+      } else {
+        res.send({ success: "UnAuthorized assess" });
+      }
+    });
+
     // delete
     app.delete("/Cars/:id", async (req, res) => {
       const id = req.params.id;
@@ -81,3 +117,17 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log("running", port);
 });
+
+function verifyToken(token) {
+  let email;
+  jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
+    if (err) {
+      email = "invalid email";
+    }
+    if (decoded) {
+      console.log(decoded);
+      email = decoded;
+    }
+  });
+  return email;
+}
